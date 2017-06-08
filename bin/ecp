@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'everyday-cli-utils'
+include EverydayCliUtils
+import :maputil, :format, :kmeans, :option
+
+class MyOptions
+  extend OptionUtil
+
+  option :newer, %w(-n --newer), desc: 'only overwrite existing files with newer versions'
+  option_with_param :exclude, %w(-e --exclude), desc: 'exclude files and folders with names matching a regex pattern', append: true
+  option_with_param :exclude_path, %w(-x --exclude-path), desc: 'exclude files and folders with paths (including name) matching a regex pattern', append: true
+end
+
+MyOptions.parse!
+
+options = MyOptions.options
+
+Signal.trap('SIGINT') {
+  puts "\nCopy Canceled\n\n"
+  exit 1
+}
